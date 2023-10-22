@@ -7,7 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,9 +37,9 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     when (amphibiansUiState) {
-        is AmphibiansUiState.Loading -> LoadingScreen()
+        is AmphibiansUiState.Loading -> LoadingScreen(modifier)
         is AmphibiansUiState.Success -> AmphibianListCard(amphibianListInfo = amphibiansUiState.info)
-        is AmphibiansUiState.Error -> ErrorScreen(retryAction = { })
+        is AmphibiansUiState.Error -> ErrorScreen(retryAction, modifier)
     }
 }
 
@@ -80,7 +78,7 @@ fun AmphibianCard(amphibian: AmphibianInfo, modifier: Modifier = Modifier) {
     ) {
 
         Text(
-            text = "${amphibian.name} (${amphibian.type})" ,
+            text = "${amphibian.name} (${amphibian.type})",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
         )
@@ -97,7 +95,7 @@ fun AmphibianCard(amphibian: AmphibianInfo, modifier: Modifier = Modifier) {
             contentScale = ContentScale.Crop,
             modifier = modifier.fillMaxWidth(),
 
-        )
+            )
         Text(
             text = amphibian.description,
             style = MaterialTheme.typography.bodyLarge,
@@ -119,10 +117,7 @@ fun AmphibianListCard(
         state = scrollState
     ) {
         items(
-            amphibianListInfo,
-            key = { amphibian ->
-            amphibian.name
-            }
+            amphibianListInfo
         ) {
             AmphibianCard(amphibian = it)
         }
